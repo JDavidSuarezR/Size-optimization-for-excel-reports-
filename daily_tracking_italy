@@ -1,0 +1,51 @@
+import pandas as pd
+import datetime
+from datetime import timedelta
+
+basepath = r"/Users/josesuarez/Desktop/statistics_supply_chain/italy/daily_tracking_report/"
+file1 = pd.read_excel(basepath + "1.xlsx", engine="openpyxl", sheet_name="productSales", header=0,usecols=["warehouse_name","product_id","items_sold_count"])
+file2 = pd.read_excel(basepath + "2.xlsx", engine="openpyxl", sheet_name="current_stocks", header=0, usecols=["warehouse_name","product_id","available"])
+file3 = pd.read_excel(basepath + "3.xlsx", engine="openpyxl", sheet_name="All Blocked Stocks", header=0,usecols=["Warehouse Name","Product Oid","Total Blocked Stock Quantity","Total Tax Excluded Waste Cost"])
+file4 = pd.read_excel(basepath + "4.xlsx", engine="openpyxl", sheet_name="IT Product Info", header=0,usecols=["marketproduct_id","market_status","marketproduct_name_en","segment_name","storagetype","inbox_quantitiy","supplier_names","isenabled","exp_days_allowed","exp_days_dead"])
+file5 = pd.read_excel(basepath + "5.xlsx", engine="openpyxl", sheet_name="location based stock report", header=0, usecols=["Warehouse Name","Product Id","Dead Date","Quantity"])
+file6 = pd.read_excel(basepath + "6.xlsx", engine="openpyxl", sheet_name="segmentless availability report", header=0,usecols=["Category Name En","Subcategory Name En","Product Id","Product Name En","City Name","Product Segments","Warehouse Name"])
+file7 = pd.read_excel(basepath + "7.xlsx", engine="openpyxl", sheet_name="supplierPerformace report", header=0,usecols=["Purchaseorder Createtor Name","Purchaseorder Createdat L","Po Expected Delivery Day L","Wpo Status","Warehouse Name","Product","Ordered Count","Received Count"])
+file8 = pd.read_excel(basepath + "8.xlsx", engine="openpyxl", sheet_name="All Transferred Stocks", header=0,usecols=["createdat","from_warehouse","to_warehouse","status","item_oid","count","pallet_status"])
+
+
+
+#file1 Configuration product sales report for daily tracking
+
+file1_pivot_table = file1.groupby(["warehouse_name","product_id"]).sum()
+file1_pivot_table = file1_pivot_table.reset_index()
+file1_pivot_table.to_excel(r"/Users/josesuarez/Desktop/statistics_supply_chain/italy/daily_tracking_report_pandas/1.xlsx",engine="openpyxl",index=0, sheet_name="productSales")
+
+#file2 Configuration current stock report for daily tracking
+
+file2.to_excel(r"/Users/josesuarez/Desktop/statistics_supply_chain/italy/daily_tracking_report_pandas/2.xlsx",engine="openpyxl",index=0,sheet_name="current_stocks")
+
+#file3 Configuration waste report report for daily tracking
+
+file3.to_excel(r"/Users/josesuarez/Desktop/statistics_supply_chain/italy/daily_tracking_report_pandas/3.xlsx",engine="openpyxl",index=0,sheet_name="All Blocked Stocks")
+
+#file4 Configuration product data report for daily tracking
+
+
+file4["Usefull life"] = file4["exp_days_allowed"] - file4["exp_days_dead"]
+file4.to_excel(r"/Users/josesuarez/Desktop/statistics_supply_chain/italy/daily_tracking_report_pandas/4.xlsx",engine="openpyxl",index=0,sheet_name="IT Product Info",columns=["marketproduct_id","marketproduct_name_en","segment_name","storagetype","inbox_quantitiy","supplier_names","isenabled","market_status","Usefull life"])
+
+#file5 Configuration location based stock report for daily tracking
+
+file5.to_excel(r"/Users/josesuarez/Desktop/statistics_supply_chain/italy/daily_tracking_report_pandas/5.xlsx",engine="openpyxl",index=0,sheet_name="location based stock report")
+
+#file6 Configuration segments availability report for daily tracking
+
+file6.to_excel(r"/Users/josesuarez/Desktop/statistics_supply_chain/italy/daily_tracking_report_pandas/6.xlsx",engine="openpyxl",index=0,sheet_name="segmentless availability report",columns=["Category Name En","Subcategory Name En","Product Id","Product Name En","City Name","Product Segments","Warehouse Name"])
+
+#file7 Configuration supplier perfomance report for daily tracking
+
+file7.to_excel(r"/Users/josesuarez/Desktop/statistics_supply_chain/italy/daily_tracking_report_pandas/7.xlsx",engine="openpyxl",index=0,sheet_name="supplierPerformace report")
+
+#file8 Configuration transfer report for daily tracking
+
+file8.to_excel(r"/Users/josesuarez/Desktop/statistics_supply_chain/italy/daily_tracking_report_pandas/8.xlsx",engine="openpyxl",index=0,sheet_name="All Transferred Stocks")
